@@ -14,6 +14,9 @@ class LittleWSGI():
     def __call__(self, environ, start_response):
         try:
             request = Request(environ)
+            
+            for middleware in self.middlewares:
+                middleware.preprocess_request(request) 
 
             method, handler, function_params = self.router.routes.get(request.path_info)
             if method != request.request_method:
@@ -40,6 +43,9 @@ class LittleWSGI():
                     
             status, headers, body = handler(**request.casted_params)
             
+            for middleware in self.middlewares:
+                status, body = middleware.postprocess_request(request, status, headers, body)
+            
             start_response(status, headers)
             return body
 
@@ -52,3 +58,7 @@ class LittleWSGI():
             status, headers, body = Response("Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR).response()
             start_response(status, headers)
             return body
+
+    def add_middleware(self, middleware):
+        if middleware not in self.middlewares:
+            self.middlewares.append(middleware)
