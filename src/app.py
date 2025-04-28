@@ -14,16 +14,24 @@ class LittleWSGI():
     def __call__(self, environ, start_response):
         try:
             request = Request(environ)
-            
-            method, handler, params = self.router.routes.get(request.path_info)
-            for param_name, param in params.items():
+
+            method, handler, function_params = self.router.routes.get(request.path_info)
+            if method != request.request_method:
+                raise HTTPException(HTTPStatus.METHOD_NOT_ALLOWED)
+
+            if method == HTTPMethod.GET:
+                request_params = request.url_params
+            elif method in SUPPORTED_HTTP_METHODS:
+                request_params = request.body_params
+
+            for param_name, param in function_params.items():
                 if param.default is not Parameter.empty:
                     request.casted_params[param_name] = param.default
 
-                if param_name in request.url_params:    
+                if param_name in function_params:    
                     try:
-                        request.casted_params[param_name] = param.annotation(request.url_params[param_name])
-                    except ValueError:
+                        request.casted_params[param_name] = param.annotation(request_params[param_name])
+                    except (ValueError, KeyError):
                         raise HTTPException(HTTPStatus.BAD_REQUEST)
 
                 if param_name not in request.casted_params:
@@ -41,6 +49,6 @@ class LittleWSGI():
             return body
 
         except Exception as e:
-            status, header, body = Response("Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR).response()
+            status, headers, body = Response("Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR).response()
             start_response(status, headers)
             return body
