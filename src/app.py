@@ -31,13 +31,16 @@ class LittleWSGI():
                 if param.default is not Parameter.empty:
                     request.casted_params[param_name] = param.default
 
-                if param_name in function_params:    
+                if param_name in request_params:    
+                    if param.annotation is Parameter.empty:
+                        request.casted_params[param_name] = request_params[param_name]
+                        continue
+
                     try:
                         request.casted_params[param_name] = param.annotation(request_params[param_name])
-                    except (ValueError, KeyError):
+                    except Exception:
                         raise HTTPException(HTTPStatus.BAD_REQUEST)
-
-                if param_name not in request.casted_params:
+                else:
                     raise HTTPException(HTTPStatus.BAD_REQUEST)
 
                     
