@@ -1,4 +1,3 @@
-
 class Middleware():
     def preprocess_request(self, request):
         return
