@@ -8,5 +8,10 @@ router = Router()
 def fun(x: str):
     return f"Hello, {x}"
 
+data = [1, 2, 3, 4]
+@router.route(HTTPMethod.GET, '/data')
+def fun2() -> list:
+    return data
+
 app = LittleWSGI(router=router)
 app.add_middleware(LoggingMiddleware())
