@@ -8,9 +8,8 @@ class Router:
     def __init__(self):
         self.routes = {}
 
-    def route(self, method: str, path: str, status: HTTPStatus | None = None, content_type: str = "application/json"):
+    def route(self, method: str, path: str, status: HTTPStatus = HTTPStatus.OK, content_type: str = "application/json"):
         method = method.upper()
-        status = status or HTTPStatus.OK
 
         if method not in SUPPORTED_HTTP_METHODS:
             raise ValueError("Invalid HTTP Method")

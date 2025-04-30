@@ -5,7 +5,7 @@ from http import HTTPMethod, HTTPStatus
 from src.exceptions import HTTPException
 from src.response import Response
 
-class LittleWSGI():
+class LittleWSGI:
 
     def __init__(self, router: Router):
         self.router = router

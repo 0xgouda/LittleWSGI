@@ -3,7 +3,7 @@ import json
 
 SUPPORTED_RESPONSE_CONTENT_TYPES = ["application/json"]
 
-class Response():
+class Response:
     def __init__(self, body, status: HTTPStatus | None = None, content_type: str = "application/json"):
         self.body = body
         status = status or HTTPStatus.OK
