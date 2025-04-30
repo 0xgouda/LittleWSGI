@@ -1,9 +1,9 @@
-from request import Request
-from router import Router, SUPPORTED_HTTP_METHODS
+from src.request import Request
+from src.router import Router, SUPPORTED_HTTP_METHODS
 from inspect import Parameter
 from http import HTTPMethod, HTTPStatus
-from exceptions import HTTPException
-from response import Response
+from src.exceptions import HTTPException
+from src.response import Response
 
 class LittleWSGI():
 
@@ -54,10 +54,10 @@ class LittleWSGI():
             start_response(status, headers)
             return body
 
-        except Exception as e:
-            status, headers, body = Response("Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR).response()
-            start_response(status, headers)
-            return body
+        #except Exception as e:
+            #status, headers, body = Response("Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR).response()
+            #start_response(status, headers)
+            #return body
 
     def add_middleware(self, middleware):
         if middleware not in self.middlewares:

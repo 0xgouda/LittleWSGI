@@ -1,4 +1,3 @@
-from response import Response
 from http import HTTPStatus
 
 class HTTPException(Exception):

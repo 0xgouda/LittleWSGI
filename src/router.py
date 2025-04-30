@@ -1,4 +1,4 @@
-from response import Response
+from src.response import Response
 from http import HTTPStatus, HTTPMethod
 from inspect import signature
 
